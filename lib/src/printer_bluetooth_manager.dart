@@ -114,7 +114,9 @@ class PrinterBluetoothManager {
               sleep(Duration(milliseconds: queueSleepTimeMs));
             }
 
-            completer.complete(PosPrintResult.success);
+            if (!completer.isCompleted) {
+              completer.complete(PosPrintResult.success);
+            }
           }
           // TODO sending disconnect signal should be event-based
           _runDelayed(3).then((dynamic v) async {
@@ -135,7 +137,9 @@ class PrinterBluetoothManager {
     _runDelayed(timeout).then((dynamic v) async {
       if (_isPrinting) {
         _isPrinting = false;
-        completer.complete(PosPrintResult.timeout);
+        if (!completer.isCompleted) {
+          completer.complete(PosPrintResult.timeout);
+        }
       }
     });
 
